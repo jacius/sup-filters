@@ -1,0 +1,29 @@
+---
+# See README.md for details about how filter rules are defined.
+
+# Star all messages from Joe Schmoe.
+from:joe.schmoe@: star
+
+
+# Sharing actions between two rules. This is YAML syntax for &anchors
+# and *references. Messages on either ruby-talk or ruby-core mailing
+# lists will have the label "ruby" applied, and be archived (removed
+# from inbox).
+
+list:ruby-talk@ruby-lang: &ruby [L:ruby, -inbox]
+list:ruby-core@ruby-lang: *ruby
+
+
+# Example using multiple conditions. All must match (i.e. AND, not OR).
+# Delete messages sent to ruby-talk with "unsubscribe" in the subject.
+# This is the peculiar syntax for using an array as a key in YAML.
+
+?
+ - list:ruby-talk@ruby-lang
+ - subj:unsubscribe
+: delete
+
+
+# Apply the label "list" to messages from *any* mailing list.
+
+list:.+:  L:list

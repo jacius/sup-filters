@@ -1,0 +1,109 @@
+= Sup Filters
+
+This is a filtering system I wrote for use with the Sup email client
+<http://sup.rubyforge.org>. Be warned that I am not maintaining it,
+and it is not very well tested. But if you find it useful, fork the
+repository and run with it! If you want to take over developing it,
+email me and I'll give you my blessing.
+
+- John Croisant (jacius at gmail)
+
+
+== Quick Start
+
+1. Copy filters.example.yaml to ~/.sup/filters.yaml and customize.
+2. Copy lib/filter.rb to ~/.sup/lib/filter.rb.
+3. Copy or append hooks/before-add-message.rb to
+   ~/.sup/hooks/before-add-message.rb
+4. Start sup or sup-sync. Filters run when a message is added to
+   the index (i.e. after polling).
+
+
+== Understanding filter rules
+
+Your filter rules are defined in a YAML file, by default located at
+~/.sup/filters.yaml. You can customize hooks/before-add-message.rb to
+pass an absolute file path or a hash of loaded filter rules as the
+second argument to SupFilters.filter_message.
+
+Each filter rule has two parts: a condition and an action. Conditions
+are things like "when the message is from Joe Schmoe" or "when the
+subject has the word 'ruby' in it". Actions are things like "add a
+label" or "mark it as spam".
+ 
+Filters are defined as key/value pairs (Hash/Dictionary) in a YAML
+file (see filters.example.yaml). The key is the condition, and the
+value is the action. It's also possible to have multiple conditions
+and/or multiple actions per rule, by using an arrays for the key or
+value. (The YAML syntax for using an array as a key is a bit awkward,
+but see filters.example.yaml for an example.)
+
+Each condition or action is a string in the form "type:param". Param
+is usually interpreted as a regular expression, but that varies
+depending on the type of condition/action. Some conditions or actions
+take no params, in which case you can just do "type".
+
+You can also prefix conditions or actions with a "-" (minus sign) to
+mean the opposite. For example, the condition "from:joe.schmoe@"
+matches messages that are from Joe Schmoe. "-from:joe.schmoe@" matches
+messages that are NOT from Joe Schmoe. The action "label:ruby" adds
+the label "ruby", while "-label:ruby" REMOVES the label "ruby".
+
+
+== Available conditions
+
+[match:regexp]  regexp matches anywhere in the raw message text.
+[from:regexp]   regexp matches the "From:" field (name or address).
+[to:regexp]     regexp matches the "To:" field (name or address).
+[subj:regexp]   regexp matches the "Subject:" field.
+[list:regexp]   regexp matches the "List-Post:" field.
+[label:name]    message has label "name".
+[spam]          message is marked as spam. (Same as "label:spam".)
+[inbox]         message is in the inbox. (Same as "label:inbox".)
+[deleted]       message is marked as deleted. (Same as "label:deleted".)
+[starred]       message is starred. (Same as "label:starred".)
+
+
+== Available actions
+
+[label:name]        add the label "name".
+[L:name]            same as "label:name". For convenience/brevity.
+[-label:*]          removes all labels. "-L:*" also works. There is no
+                    positive version (i.e. "label:*" is not valid).
+[inbox]             add the message in the inbox.
+                    (Same as "label:inbox".)
+[unread]            mark the message as unread.
+                    (Same as "label:unread" or "-read".)
+[read]              mark the message as read.
+                    (Same as "-label:unread" or "-unread".)
+[star]              star the message. (Same as "label:star".)
+[spam]              mark the message as spam. (Same as "label:spam".)
+[deleted]           mark the message as deleted.
+                    (Same as "label:deleted".)
+[delete]            same as "deleted".
+
+
+== License
+
+filter.rb is licensed under the following terms (the "MIT License"):
+
+Copyright (c) 2010 John Croisant
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

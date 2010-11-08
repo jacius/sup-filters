@@ -1,0 +1,15 @@
+I am not working on this software anymore, but here are some ideas for
+how it could be improved in the future. Some of them may require
+extending Sup itstelf.
+
+- Ability to easily apply filters to messages at any time, from within
+  Sup. Ideally, apply filters to all tagged messages.
+
+- Easier syntax for multiple conditions. Maybe space-separated string.
+
+- A way to edit and add filters from within Sup.
+
+- Add "body:regexp" condition (matches message body). I couldn't
+  figure out how to do it. See BodyCondition in lib/filter.rb.
+
+- Automatically reload cached filters if the file has changed.
