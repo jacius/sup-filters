@@ -106,7 +106,7 @@ module SupFilters
        when "from";    FromCondition
        when "to";      ToCondition
        when "subj";    SubjCondition
-       #when "body";   BodyCondition
+       when "body";    BodyCondition
        when "list";    ListCondition
        when "label";   LabelCondition
        when "spam";    SpamCondition
@@ -192,11 +192,11 @@ module SupFilters
 
   ## Not available because I can't figure out how to access the
   ## message body. :\
-  # class BodyCondition < Condition
-  #   def test( message )
-  #     @param_re =~ message.body
-  #   end
-  # end
+  class BodyCondition < Condition
+    def test( message )
+      @param_re =~ message.raw_message
+    end
+  end
 
   class ListCondition < Condition
     def test( message )
